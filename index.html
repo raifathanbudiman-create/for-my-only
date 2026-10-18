@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surat Cinta Digital</title>
+    <style>
+        :root {
+            --bg-color: #fce4ec;
+            --paper-color: #fffaf0;
+            --accent-color: #d81b60;
+            --text-color: #4a4a4a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: 'Georgia', serif;
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .book-container {
+            width: 100%;
+            max-width: 500px;
+            background: var(--paper-color);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            padding: 25px;
+            position: relative;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        h1, h2 {
+            color: var(--accent-color);
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .polaroid-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+            margin-top: 15px;
+            max-height: 60vh;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        /* Custom Scrollbar biar rapi saat scroll 15 foto */
+        .polaroid-grid::-webkit-scrollbar {
+            width: 6px;
+        }
+        .polaroid-grid::-webkit-scrollbar-thumb {
+            background: var(--accent-color);
+            border-radius: 10px;
+        }
+
+        .polaroid-card {
+            background: #fff;
+            padding: 12px 12px 20px 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border-radius: 4px;
+            width: 100%;
+            max-width: 280px;
+            text-align: center;
+            transform: rotate(-2deg);
+            transition: transform 0.3s ease;
+        }
+
+        .polaroid-card:nth-child(even) {
+            transform: rotate(2deg);
+        }
+
+        .polaroid-card:hover {
+            transform: scale(1.03) rotate(0deg);
+        }
+
+        .polaroid-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        .polaroid-card .caption {
+            margin-top: 10px;
+            font-size: 0.95rem;
+            font-style: italic;
+            color: #555;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+        }
+
+        button {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .flip-card {
+            background-color: #fff;
+            border: 1px solid #f0f0f0;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            cursor: pointer;
+        }
+
+        .envelope-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .letter-paper {
+            background: #fff;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px dashed var(--accent-color);
+            margin-top: 10px;
+            line-height: 1.6;
+        }
+
+        #hearts-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 99;
+        }
+
+        .heart-particle {
+            position: absolute;
+            top: -20px;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(105vh) rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="hearts-container"></div>
+
+    <div class="book-container">
+        <!-- HALAMAN 1: SAMPUL -->
+        <div class="page active" data-page="1">
+            <h1>Untuk <span class="recipient-name">Sayangku</span> 💖</h1>
+            <p style="text-align: center; margin-top: 20px;">Ini kamu dari POV Hati aku</p>
+            <p style="text-align: center; font-size: 0.85rem; color: #888; margin-top: 10px;">
+                Tanggal Spesial: <span id="anniv-date">19 Oktober 2026</span>
+            </p>
+        </div>
+
+        <!-- HALAMAN 2: ALASAN MENCINTAI -->
+        <div class="page" data-page="2">
+            <h2>letting you know that you are...</h2>
+            <div id="reasons-grid"></div>
+        </div>
+
+        <!-- HALAMAN 3: GALERI FOTO POLAROID (15 FOTO) -->
+        <div class="page" data-page="3">
+            <h2>Momen Indah Kita (15 Foto)</h2>
+            <div class="polaroid-grid">
+                
+                <!-- Foto 1 -->
+                <div class="polaroid-card">
+                    <img src="IMG_8383.JPG" alt="Foto 1" onclick="openLightbox(this)">
+                    <p class="caption">kita fotobut pake bunga <3</p>
+                </div>
+
+                <!-- Foto 2 -->
+                <div class="polaroid-card">
+                    <img src="3CDC1C6F-F952-4281-A973-C5CD5A14F946.jpg" alt="Foto 2" onclick="openLightbox(this)">
+                    <p class="caption">yeeey bikin lopee</p>
+                </div>
+
+                <!-- Foto 3 -->
+                <div class="polaroid-card">
+                    <img src="C5E1E99B-C9FA-4994-8FB8-BB179EDD5713.jpg" alt="Foto 3" onclick="openLightbox(this)">
+                    <p class="caption">kita selalu hepii 2</p>
+                </div>
+
+                <!-- Foto 4 -->
+                <div class="polaroid-card">
+                    <img src="IMG_8637.jpg" alt="Foto 4" onclick="openLightbox(this)">
+                    <p class="caption">kamu cantik mampus disini</p>
+                </div>
+
+                <!-- Foto 5 -->
+                <div class="polaroid-card">
+                    <img src="IMG_8980.jpg" alt="Foto 5" onclick="openLightbox(this)">
+                    <p class="caption">ga sengaja kapelan wkwk</p>
+                </div>
+
+                <!-- Foto 6 -->
+                <div class="polaroid-card">
+                    <img src="IMG_9041.PNG" alt="Foto 6" onclick="openLightbox(this)">
+                    <p class="caption">polkadotss</p>
+                </div>
+
+                <!-- Foto 7 -->
+                <div class="polaroid-card">
+                    <img src="IMG_9049.PNG" alt="Foto 7" onclick="openLightbox(this)">
+                    <p class="caption">besok kita pergi mamam</p>
+                </div>
+
+                <!-- Foto 8 -->
+                <div class="polaroid-card">
+                    <img src="IMG_9077.jpg" alt="Foto 8" onclick="openLightbox(this)">
+                    <p class="caption">kamu cape tapi tetep imut</p>
+                </div>
+
+                <!-- Foto 9 -->
+                <div class="polaroid-card">
+                    <img src="IMG_9156.jpg" alt="Foto 9" onclick="openLightbox(this)">
+                    <p class="caption">bakop as always</p>
+                </div>
+
+                <!-- Foto 10 -->
+                <div class="polaroid-card">
+                    <img src="IMG_9173.jpg" alt="Foto 10" onclick="openLightbox(this)">
+                    <p class="caption">kita mau mam fish n chip guyss..</p>
+                </div>
+
+                <!-- Foto 11 -->
+                <div class="polaroid-card">
+                    <img src="IMG_9240.jpg" alt="Foto 11" onclick="openLightbox(this)">
+                    <p class="caption">cebelapa imut ci aku</p>
+                </div>
+
+                <!-- Foto 12 -->
+                <div class="polaroid-card">
+                    <img src="IMG_9346.jpg" alt="Foto 12" onclick="openLightbox(this)">
+                    <p class="caption">mam and mam and mam</p>
+                </div>
+
+                <!-- Foto 13 -->
+                <div class="polaroid-card">
+                    <img src="IMG_9396.jpg" alt="Foto 13" onclick="openLightbox(this)">
+                    <p class="caption">kita menonton ahmad dhani</p>
+                </div>
+
+                <!-- Foto 14 -->
+                <div class="polaroid-card">
+                    <img src="IMG_9523.jpg" alt="Foto 14" onclick="openLightbox(this)">
+                    <p class="caption">manusia imut penhuni bakop</p>
+                </div>
+
+                <!-- Foto 15 -->
+                <div class="polaroid-card">
+                    <img src="LENSCAPE1-74390.jpeg" alt="Foto 15" onclick="openLightbox(this)">
+                    <p class="caption">ini mama sama papa dlu nak</p>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- HALAMAN 4: SURAT RAHASIA -->
+        <div class="page" data-page="4">
+            <h2>Surat Untukmu</h2>
+            <div class="envelope-container">
+                <button onclick="toggleEnvelope()">📖 Buka / Tutup Surat</button>
+                <div id="envelope">
+                    <div class="letter-paper">
+                        <p id="letter-content"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- HALAMAN 5: PENUTUP -->
+        <div class="page" data-page="5">
+            <h2>Terima Kasih</h2>
+            <p style="text-align: center; line-height: 1.6; margin-top: 20px;">
+                Terima kasih sudah menjadi bagian terindah dalam hidupku.
+            </p>
+            <p style="text-align: center; margin-top: 30px; font-weight: bold;">
+                Dari: <span class="sender-name">Namamu</span>
+            </p>
+        </div>
+
+        <!-- TOMBOL NAVIGASI HALAMAN -->
+        <div class="nav-buttons">
+            <button id="prev-btn" onclick="turnPage(-1)">← SBLM</button>
+            <span style="font-size: 0.85rem; align-self: center;">Halaman <span id="current-page-num">1</span> dari 5</span>
+            <button id="next-btn" onclick="turnPage(1)">LNJT →</button>
+        </div>
+    </div>
+
+    <!-- TAG AUDIO DANIEL CAESAR - ALWAYS -->
+    <audio id="bg-music" src="Daniel Caesar - Always (Official Audio).mp3" loop></audio>
+
+    <!-- SCRIPT JS DIPANGGIL DI BAWAH -->
+    <script src="script.js"></script>
+</body>
+</html>
